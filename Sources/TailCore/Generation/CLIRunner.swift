@@ -56,7 +56,7 @@ public enum CLIRunner {
     private static let active = Mutex<[UUID: ProcessControl]>([:])
     public static func terminateAll() {
         let values = active.withLock { Array($0.values) }
-        values.forEach { $0.stopImmediately() }
+        for value in values { value.stopImmediately() }
     }
     public static func environment(_ source: [String: String] = ProcessInfo.processInfo.environment)
         -> [String: String]
@@ -117,8 +117,8 @@ public enum CLIRunner {
         let argv = ([executable] + arguments).map { strdup($0) } + [nil]
         let envp = environment.map { strdup("\($0.key)=\($0.value)") } + [nil]
         defer {
-            argv.forEach { free($0) }
-            envp.forEach { free($0) }
+            for arg in argv { free(arg) }
+            for variable in envp { free(variable) }
         }
         var pid: pid_t = 0
         let status = argv.withUnsafeBufferPointer { args in
