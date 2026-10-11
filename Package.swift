@@ -12,4 +12,5 @@ let package = Package(
         .executableTarget(name: "TailApp", dependencies: ["TailCore"]),
         .executableTarget(name: "TailQA", dependencies: ["TailCore"]),
         .testTarget(name: "TailCoreTests", dependencies: ["TailCore"]),
+        .testTarget(name: "TailAppTests", dependencies: ["TailApp"]),
     ], swiftLanguageModes: [.v6])
