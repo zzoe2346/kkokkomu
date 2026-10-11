@@ -53,6 +53,7 @@ public struct CodexClient: Sendable {
             sources는 이번 호출에서 실제 확인한 공식 출처만 title/url로 넣고, 확인하지 않았으면 빈 배열로 두세요.
             verificationNote에는 확인한 조건 또는 추가 확인이 필요한 조건을 짧게 적으세요. 단정할 수 없는 사실은 단정하지 마세요.
             일반 설명에 raw HTML이나 이미지를 넣지 마세요. 필요한 코드/SQL은 Markdown fenced code로 표시하세요.
+            항목 구분에 가운뎃점을 쓰지 말고 쉼표, 줄바꿈이나 별도 문장으로 표현하세요.
             스키마를 만족하는 JSON만 반환하세요.
             """ + "\n" + String(decoding: try JSONEncoder().encode(context), as: UTF8.self)
         let job = FileManager.default.temporaryDirectory.appendingPathComponent(
