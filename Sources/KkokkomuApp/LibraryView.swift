@@ -1,6 +1,6 @@
 import AppKit
+import KkokkomuCore
 import SwiftUI
-import TailCore
 
 struct LibraryView: View {
     @Bindable var store: StudyStore
@@ -81,7 +81,7 @@ struct LibraryView: View {
                     Text(store.saveStatus)
                     if store.saveStatus.contains("실패") { Button("다시 저장") { store.saveAgain() } }
                     Spacer()
-                    Text("Tail: 내 말로 설명하는 연습")
+                    Text("꼬꼬무: 내 말로 설명하는 연습")
                 }.font(.caption).foregroundStyle(.secondary).padding(.horizontal, 20).padding(
                     .vertical, 8)
             }.background(Color(nsColor: .textBackgroundColor))

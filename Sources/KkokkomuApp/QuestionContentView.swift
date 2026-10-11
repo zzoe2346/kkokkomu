@@ -1,8 +1,8 @@
+import KkokkomuCore
 import SwiftUI
-import TailCore
 
 struct QuestionContentView: View {
-    let material: TailCore.Material
+    let material: KkokkomuCore.Material
     @AppStorage("fontSize", store: Preferences.defaults) private var size = 17.0
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

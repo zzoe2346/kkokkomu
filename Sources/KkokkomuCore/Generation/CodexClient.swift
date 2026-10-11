@@ -23,7 +23,8 @@ public struct CodexClient: Sendable {
             String(decoding: r.output + r.error, as: UTF8.self).lowercased().contains(
                 "logged in using chatgpt")
         else {
-            throw TailError.generation("ChatGPT 로그인이 필요합니다. 터미널에서 codex login을 실행한 뒤 연결을 확인하세요.")
+            throw KkokkomuError.generation(
+                "ChatGPT 로그인이 필요합니다. 터미널에서 codex login을 실행한 뒤 연결을 확인하세요.")
         }
     }
     public func generate(
@@ -63,7 +64,7 @@ public struct CodexClient: Sendable {
             스키마를 만족하는 JSON만 반환하세요.
             """ + "\n" + String(decoding: try JSONEncoder().encode(context), as: UTF8.self)
         let job = FileManager.default.temporaryDirectory.appendingPathComponent(
-            "tail-generation-\(UUID())")
+            "kkokkomu-generation-\(UUID())")
         try FileManager.default.createDirectory(at: job, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: job) }
         let schema = job.appendingPathComponent("schema.json")
@@ -85,14 +86,15 @@ public struct CodexClient: Sendable {
             let text = String(decoding: result.error + result.output.suffix(8192), as: UTF8.self)
                 .lowercased()
             if text.contains("429") || text.contains("usage limit") || text.contains("quota") {
-                throw TailError.generation(
+                throw KkokkomuError.generation(
                     "Codex 사용 한도에 도달했습니다. 저장된 기록은 계속 볼 수 있고 나중에 재시도할 수 있습니다.")
             }
-            throw TailError.generation("AI 응답을 완료하지 못했습니다. 연결과 로그인을 확인한 뒤 재시도하세요. 입력 내용은 보존했습니다.")
+            throw KkokkomuError.generation(
+                "AI 응답을 완료하지 못했습니다. 연결과 로그인을 확인한 뒤 재시도하세요. 입력 내용은 보존했습니다.")
         }
         let values = try output.resourceValues(forKeys: [.fileSizeKey, .isSymbolicLinkKey])
         guard values.isSymbolicLink != true, (values.fileSize ?? Int.max) < 2_000_000 else {
-            throw TailError.invalid("생성 결과 파일을 읽을 수 없습니다.")
+            throw KkokkomuError.invalid("생성 결과 파일을 읽을 수 없습니다.")
         }
         var generated = try JSONDecoder().decode(Generation.self, from: Data(contentsOf: output))
         if let question {

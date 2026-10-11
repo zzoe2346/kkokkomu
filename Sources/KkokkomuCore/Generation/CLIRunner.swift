@@ -96,7 +96,7 @@ public enum CLIRunner {
         var stdoutFD: [Int32] = [0, 0]
         var stderrFD: [Int32] = [0, 0]
         guard pipe(&stdinFD) == 0, pipe(&stdoutFD) == 0, pipe(&stderrFD) == 0 else {
-            throw TailError.generation("프로세스 통신을 준비하지 못했습니다.")
+            throw KkokkomuError.generation("프로세스 통신을 준비하지 못했습니다.")
         }
         defer { for fd in stdinFD + stdoutFD + stderrFD where fd >= 0 { close(fd) } }
         var actions: posix_spawn_file_actions_t?
@@ -128,7 +128,7 @@ public enum CLIRunner {
             }
         }
         guard status == 0 else {
-            throw TailError.generation("Codex CLI를 실행하지 못했습니다. 설정에서 실행 파일 경로를 확인하세요.")
+            throw KkokkomuError.generation("Codex CLI를 실행하지 못했습니다. 설정에서 실행 파일 경로를 확인하세요.")
         }
         control.install(pid)
         close(stdinFD[0])
@@ -145,7 +145,7 @@ public enum CLIRunner {
             var exit: Int32 = 0
             waitpid(pid, &exit, 0)
             control.clear()
-            throw TailError.generation("CLI 파이프를 준비하지 못했습니다.")
+            throw KkokkomuError.generation("CLI 파이프를 준비하지 못했습니다.")
         }
         // A closed input pipe reports EPIPE instead of taking down the application.
         _ = fcntl(stdinFD[1], F_SETNOSIGPIPE, 1)
@@ -158,7 +158,7 @@ public enum CLIRunner {
         var failed = false
         var childStatus: Int32 = 0
         var reaped = false
-        var stopReason: TailError?
+        var stopReason: KkokkomuError?
         let deadline = Date().addingTimeInterval(timeout)
         defer {
             kill(-pid, SIGKILL)
@@ -175,12 +175,12 @@ public enum CLIRunner {
                     if error.count < 65_536 { error.append(data.prefix(65_536 - error.count)) }
                 } else {
                     guard output.count + count <= 32 * 1024 * 1024 else {
-                        throw TailError.generation("CLI 출력이 허용 크기를 초과했습니다.")
+                        throw KkokkomuError.generation("CLI 출력이 허용 크기를 초과했습니다.")
                     }
                     output.append(data)
                     pending.append(data)
                     guard pending.count <= 4 * 1024 * 1024 else {
-                        throw TailError.generation("CLI 이벤트가 허용 크기를 초과했습니다.")
+                        throw KkokkomuError.generation("CLI 이벤트가 허용 크기를 초과했습니다.")
                     }
                     while let newline = pending.firstIndex(of: 10) {
                         let line = pending.prefix(upTo: newline)
@@ -232,7 +232,7 @@ public enum CLIRunner {
                 try consume(stderrFD[0], stderr: true)
                 break
             }
-            if value < 0 { throw TailError.generation("CLI 종료 상태를 읽지 못했습니다.") }
+            if value < 0 { throw KkokkomuError.generation("CLI 종료 상태를 읽지 못했습니다.") }
             Thread.sleep(forTimeInterval: 0.02)
         }
         if let stopReason { throw stopReason }

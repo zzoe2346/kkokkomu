@@ -1,6 +1,6 @@
 import AppKit
+import KkokkomuCore
 import SwiftUI
-import TailCore
 
 @MainActor final class AppDelegate: NSObject, NSApplicationDelegate {
     var store: StudyStore?
@@ -19,14 +19,14 @@ import TailCore
 }
 typealias ViewState<Value> = SwiftUI.State<Value>
 
-@main struct TailApp: App {
+@main struct KkokkomuApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @ViewState<StudyStore> private var store = StudyStore()
     @AppStorage("appearance", store: Preferences.defaults) private var appearance = "system"
     @AppStorage("fontSize", store: Preferences.defaults) private var fontSize = 17.0
     @Environment(\.scenePhase) private var phase
     var body: some Scene {
-        Window("Tail", id: "main") {
+        Window("꼬꼬무", id: "main") {
             LibraryView(store: store)
                 .preferredColorScheme(
                     appearance == "light" ? .light : appearance == "dark" ? .dark : nil

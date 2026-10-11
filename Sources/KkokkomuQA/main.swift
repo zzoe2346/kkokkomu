@@ -1,5 +1,5 @@
 import Foundation
-import TailCore
+import KkokkomuCore
 
 if CommandLine.arguments.contains("--live") {
     let directory = URL(fileURLWithPath: CommandLine.arguments.last!)
@@ -37,5 +37,5 @@ if CommandLine.arguments.contains("--live") {
     print("실제 Codex 생성 및 저장 완료: \(directory.path)")
     print("꼬리 질문: \(evaluated.nextQuestion.text)")
 } else {
-    print("사용법: swift run TailQA --live work/qa-live")
+    print("사용법: swift run KkokkomuQA --live work/qa-live")
 }

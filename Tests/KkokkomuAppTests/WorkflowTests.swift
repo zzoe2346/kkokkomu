@@ -1,8 +1,8 @@
 import Foundation
-import TailCore
+import KkokkomuCore
 import Testing
 
-@testable import TailApp
+@testable import KkokkomuApp
 
 @MainActor private func waitForOperation(_ store: StudyStore) async throws {
     let until = Date().addingTimeInterval(6)
@@ -11,7 +11,7 @@ import Testing
 }
 @MainActor private func makeStore() async throws -> StudyStore {
     let url = FileManager.default.temporaryDirectory.appendingPathComponent(
-        "tail-workflow-\(UUID())")
+        "kkokkomu-workflow-\(UUID())")
     let store = StudyStore(directory: url)
     await store.load()
     store.addSample()

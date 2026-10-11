@@ -1,6 +1,6 @@
 import Foundation
 
-public enum TailError: Error, LocalizedError, Sendable {
+public enum KkokkomuError: Error, LocalizedError, Sendable {
     case invalid(String)
     case generation(String)
     case storage(String)
@@ -69,11 +69,11 @@ public struct Material: Codable, Sendable, Equatable {
     public func validate() throws {
         guard !text.trimmed.isEmpty, !sampleAnswer.trimmed.isEmpty, !explanation.trimmed.isEmpty,
             !hints.isEmpty, text.count < 8000
-        else { throw TailError.invalid("질문이나 해설이 비어 있습니다. 다시 생성하세요.") }
+        else { throw KkokkomuError.invalid("질문이나 해설이 비어 있습니다. 다시 생성하세요.") }
         if let presentation {
             guard !presentation.title.trimmed.isEmpty, presentation.title.count <= 100,
                 !presentation.prompt.trimmed.isEmpty, presentation.fullText.count < 8000
-            else { throw TailError.invalid("질문의 제목이나 핵심 질문이 올바르지 않습니다.") }
+            else { throw KkokkomuError.invalid("질문의 제목이나 핵심 질문이 올바르지 않습니다.") }
         }
     }
 }
@@ -104,11 +104,11 @@ public struct Generation: Codable, Sendable, Equatable {
         if evaluation {
             try nextQuestion.validate()
             guard !(feedback.strengths + feedback.corrections + feedback.gaps).isEmpty else {
-                throw TailError.invalid("피드백이 비어 있습니다. 저장된 답변에서 다시 시도하세요.")
+                throw KkokkomuError.invalid("피드백이 비어 있습니다. 저장된 답변에서 다시 시도하세요.")
             }
         }
         guard feedback.sources.allSatisfy({ $0.safeURL != nil }) else {
-            throw TailError.invalid("참고 자료 주소가 올바르지 않습니다.")
+            throw KkokkomuError.invalid("참고 자료 주소가 올바르지 않습니다.")
         }
     }
 }
@@ -217,9 +217,9 @@ public struct Library: Codable, Sendable, Equatable {
             !attempts.contains(where: { $0.questionID == questionID && $0.status == "pending" }),
             !text.trimmed.isEmpty
         else {
-            throw TailError.invalid("답변을 입력하거나 진행 중인 제출이 끝날 때까지 기다려주세요.")
+            throw KkokkomuError.invalid("답변을 입력하거나 진행 중인 제출이 끝날 때까지 기다려주세요.")
         }
-        guard text.count <= 30000 else { throw TailError.invalid("답변은 30,000자 이내로 입력하세요.") }
+        guard text.count <= 30000 else { throw KkokkomuError.invalid("답변은 30,000자 이내로 입력하세요.") }
         let attempt = Attempt(question: questions[i], text: text)
         attempts.append(attempt)
         questions[i].isAnswering = false
@@ -254,7 +254,7 @@ public struct Library: Codable, Sendable, Equatable {
                 s.currentQuestionID == nil
                     || questions.contains { $0.id == s.currentQuestionID && $0.sessionID == s.id }
             })
-        else { throw TailError.invalid("학습 기록의 연결이 올바르지 않습니다. 원본을 유지했습니다.") }
+        else { throw KkokkomuError.invalid("학습 기록의 연결이 올바르지 않습니다. 원본을 유지했습니다.") }
     }
     public mutating func removeSession(_ id: UUID) {
         let ids = Set(questions.filter { $0.sessionID == id }.map(\.id))

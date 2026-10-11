@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import TailCore
+@testable import KkokkomuCore
 
 func fixture() -> Library {
     var lib = Library()
@@ -18,7 +18,7 @@ func fixture() -> Library {
 }
 func temporaryDB() -> URL {
     FileManager.default.temporaryDirectory.appendingPathComponent(
-        "tail-test-\(UUID())/library.sqlite")
+        "kkokkomu-test-\(UUID())/library.sqlite")
 }
 
 @Test func submissionIsImmutableAndDeduplicated() throws {
@@ -26,7 +26,7 @@ func temporaryDB() -> URL {
     let id = lib.questions[0].id
     let first = try lib.submit(questionID: id, text: "두 요청이 같은 값을 읽습니다.")
     #expect(lib.questions[0].draft.isEmpty)
-    #expect(throws: TailError.self) { try lib.submit(questionID: id, text: "중복 클릭") }
+    #expect(throws: KkokkomuError.self) { try lib.submit(questionID: id, text: "중복 클릭") }
     lib.attempts[0].status = "complete"
     lib.questions[0].isAnswering = true
     _ = try lib.submit(questionID: id, text: "순서를 보완한 답변")
@@ -53,7 +53,7 @@ func temporaryDB() -> URL {
     lib.questions.append(
         Question(
             sessionID: other.id, parentID: lib.questions[0].id, ordinal: 2, material: Material()))
-    #expect(throws: TailError.self) { try lib.validate() }
+    #expect(throws: KkokkomuError.self) { try lib.validate() }
 }
 @Test func spacedReviewUsesCalendarAndSelfRating() {
     var calendar = Calendar(identifier: .gregorian)

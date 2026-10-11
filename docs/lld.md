@@ -1,6 +1,6 @@
 # 구현 구조와 데이터 계약
 
-Swift Package Manager와 Swift 6 언어 모드로 빌드한다. TailCore는 UI와 분리된 학습 모델, SQLite 저장소와 Codex 클라이언트를 제공한다. TailApp은 메인 액터의 화면 상태와 네이티브 화면을 담당한다.
+Swift Package Manager와 Swift 6 언어 모드로 빌드한다. KkokkomuCore는 UI와 분리된 학습 모델, SQLite 저장소와 Codex 클라이언트를 제공한다. KkokkomuApp은 메인 액터의 화면 상태와 네이티브 화면을 담당한다.
 
 SQLite의 session, question, attempt, review 테이블은 외래 키로 관계를 보존한다. 각 행의 버전 가능한 JSON payload에는 본문과 해당 시점의 생성 결과를 담는다. 저장은 actor에서 직렬화하며 수정된 행만 트랜잭션으로 반영한다. 초안은 지연 저장하고 제출, 화면 이동과 종료 때 즉시 반영한다. UI 변경마다 증가하는 revision으로 오래된 저장 요청이 최신 상태를 덮지 않게 한다.
 

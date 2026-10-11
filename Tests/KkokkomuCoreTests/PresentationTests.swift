@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import TailCore
+@testable import KkokkomuCore
 
 @Test func legacyQuestionKeepsItsOriginalTextWithoutPresentation() throws {
     let json =
@@ -39,5 +39,5 @@ import Testing
 @Test func incompleteQuestionPresentationIsRejected() {
     var material = Sample.library().questions[0].material
     material.presentation?.prompt = "  "
-    #expect(throws: TailError.self) { try material.validate() }
+    #expect(throws: KkokkomuError.self) { try material.validate() }
 }

@@ -1,5 +1,5 @@
+import KkokkomuCore
 import SwiftUI
-import TailCore
 
 struct ReviewView: View {
     @Bindable var store: StudyStore

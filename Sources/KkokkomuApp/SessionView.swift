@@ -1,5 +1,5 @@
+import KkokkomuCore
 import SwiftUI
-import TailCore
 
 struct RichText: View {
     let text: String

@@ -1,6 +1,6 @@
 import AppKit
+import KkokkomuCore
 import SwiftUI
-import TailCore
 
 struct PreferencesView: View {
     @Bindable var store: StudyStore

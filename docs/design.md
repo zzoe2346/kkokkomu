@@ -1,4 +1,10 @@
-# Tail macOS 화면 기준
+# 꼬꼬무 macOS 화면 기준
+
+## 앱 이름과 기존 설정
+
+2026-10-12 Apple의 [CFBundleDisplayName](https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundledisplayname)과 [CFBundleIdentifier](https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier)를 확인했다. 표시 이름은 시스템에 보이는 이름이고, 번들 식별자는 앱과 해당 환경설정을 식별한다. 이에 따라 `CFBundleName`, `CFBundleDisplayName`, 기본 창과 상태 문구는 꼬꼬무로 바꾸고, 번들 식별자 `com.zzoe.tail`과 기존 UserDefaults 영역을 유지한다. 영문 실행 파일과 Swift 모듈은 Kkokkomu로 통일한다.
+
+## 화면 구성
 
 확인일은 2026-10-12다. macOS 26 이상 네이티브 앱으로 기본 NavigationSplitView, sidebar List, toolbar, sheet와 Form을 사용한다. 현재 질문과 답변 입력을 중심으로 구성하고 과거 문답은 접어둔다. 본문 기본 17pt, 14~36pt 조절과 시스템 테마를 제공한다. 본문에 Glass를 덮지 않고 시스템 툴바와 주요 조작에 사용한다. 코드 블록의 공백과 줄을 보존한다.
 
@@ -13,4 +19,4 @@
 
 새 질문은 짧은 제목, 상황과 코드, 핵심 질문을 별도 데이터로 생성한다. 가정 여부는 작은 표시로 구분하고 학습 의도는 기본적으로 접어둔다. 정답을 암시하는 문구나 비교 후보의 차별 강조는 피한다. 기존 데이터에 표시 정보가 없으면 질문 원문을 그대로 일반 본문 크기로 표시한다. 사용자가 저장한 읽기 설정은 덮어쓰지 않는다.
 
-Apple의 [Layout](https://developer.apple.com/design/human-interface-guidelines/layout)에서 읽기 순서, 정렬, 본문 폭을 통한 정보 계층 원칙을 확인했고, [Design principles](https://developer.apple.com/design/human-interface-guidelines/design-principles)의 간결한 표현과 필요한 조작 중심 배치를 참고했다. 확인일은 2026-10-12다. 구체적인 글자 크기와 간격은 Tail 화면 검토를 바탕으로 정한 값이며 Apple의 필수 수치가 아니다.
+Apple의 [Layout](https://developer.apple.com/design/human-interface-guidelines/layout)에서 읽기 순서, 정렬, 본문 폭을 통한 정보 계층 원칙을 확인했고, [Design principles](https://developer.apple.com/design/human-interface-guidelines/design-principles)의 간결한 표현과 필요한 조작 중심 배치를 참고했다. 확인일은 2026-10-12다. 구체적인 글자 크기와 간격은 꼬꼬무 화면 검토를 바탕으로 정한 값이며 Apple의 필수 수치가 아니다.

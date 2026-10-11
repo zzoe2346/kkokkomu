@@ -18,7 +18,7 @@ public actor Repository {
         guard sqlite3_open_v2(target.path, &pointer, flags, nil) == SQLITE_OK, let db = pointer
         else {
             if let pointer { sqlite3_close(pointer) }
-            throw TailError.storage("학습 보관함을 열 수 없습니다. 저장 위치와 권한을 확인하세요.")
+            throw KkokkomuError.storage("학습 보관함을 열 수 없습니다. 저장 위치와 권한을 확인하세요.")
         }
         defer { sqlite3_close(db) }
         sqlite3_busy_timeout(db, 5000)
@@ -27,20 +27,20 @@ public actor Repository {
     }
     private func execute(_ db: OpaquePointer, _ sql: String) throws {
         guard sqlite3_exec(db, sql, nil, nil, nil) == SQLITE_OK else {
-            throw TailError.storage("학습 기록 저장에 실패했습니다. 원본을 유지했습니다. (\(sqlite3_errcode(db)))")
+            throw KkokkomuError.storage("학습 기록 저장에 실패했습니다. 원본을 유지했습니다. (\(sqlite3_errcode(db)))")
         }
     }
     private func rows(_ db: OpaquePointer, _ sql: String) throws -> [[String]] {
         var stmt: OpaquePointer?
         guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK, let stmt else {
-            throw TailError.storage("보관함 형식을 읽을 수 없습니다.")
+            throw KkokkomuError.storage("보관함 형식을 읽을 수 없습니다.")
         }
         defer { sqlite3_finalize(stmt) }
         var result: [[String]] = []
         while true {
             let status = sqlite3_step(stmt)
             if status == SQLITE_DONE { return result }
-            guard status == SQLITE_ROW else { throw TailError.storage("보관함을 읽지 못했습니다.") }
+            guard status == SQLITE_ROW else { throw KkokkomuError.storage("보관함을 읽지 못했습니다.") }
             result.append(
                 (0..<sqlite3_column_count(stmt)).map { i in
                     sqlite3_column_text(stmt, i).map { String(cString: $0) } ?? ""
@@ -50,11 +50,11 @@ public actor Repository {
     private func schema(_ db: OpaquePointer) throws {
         let version = try rows(db, "PRAGMA user_version").first?.first
         guard version == "0" || version == "1" else {
-            throw TailError.storage("더 새로운 버전의 보관함입니다. 앱을 업데이트하세요.")
+            throw KkokkomuError.storage("더 새로운 버전의 보관함입니다. 앱을 업데이트하세요.")
         }
         if version == "0" {
             guard try rows(db, "SELECT name FROM sqlite_master WHERE type='table'").isEmpty else {
-                throw TailError.storage("알 수 없는 데이터 파일입니다.")
+                throw KkokkomuError.storage("알 수 없는 데이터 파일입니다.")
             }
             try execute(
                 db,
@@ -75,7 +75,7 @@ public actor Repository {
         guard try rows(db, "PRAGMA user_version").first?.first == "1",
             try rows(db, "PRAGMA quick_check").first?.first == "ok",
             try rows(db, "PRAGMA foreign_key_check").isEmpty
-        else { throw TailError.storage("백업 형식이나 무결성을 확인하지 못했습니다.") }
+        else { throw KkokkomuError.storage("백업 형식이나 무결성을 확인하지 못했습니다.") }
         func decode<T: Decodable>(_ table: String, _: T.Type) throws -> [T] {
             try rows(db, "SELECT payload FROM \(table) ORDER BY rowid").map {
                 try JSONDecoder().decode(T.self, from: Data($0[0].utf8))
@@ -90,7 +90,7 @@ public actor Repository {
         // Validate payload identifiers against indexed relations as well as against other payloads.
         let sessions = try rows(db, "SELECT id FROM session").map { $0[0] }
         guard Set(sessions) == Set(lib.sessions.map { $0.id.uuidString }) else {
-            throw TailError.invalid("보관함 식별자가 일치하지 않습니다.")
+            throw KkokkomuError.invalid("보관함 식별자가 일치하지 않습니다.")
         }
         for r in try rows(db, "SELECT id, session_id, COALESCE(parent_id,'') FROM question") {
             guard
@@ -98,19 +98,19 @@ public actor Repository {
                     $0.id.uuidString == r[0] && $0.sessionID.uuidString == r[1]
                         && ($0.parentID?.uuidString ?? "") == r[2]
                 })
-            else { throw TailError.invalid("질문의 연결이 올바르지 않습니다.") }
+            else { throw KkokkomuError.invalid("질문의 연결이 올바르지 않습니다.") }
         }
         for r in try rows(db, "SELECT id, question_id FROM attempt") {
             guard
                 lib.attempts.contains(where: {
                     $0.id.uuidString == r[0] && $0.questionID.uuidString == r[1]
                 })
-            else { throw TailError.invalid("답변의 연결이 올바르지 않습니다.") }
+            else { throw KkokkomuError.invalid("답변의 연결이 올바르지 않습니다.") }
         }
         guard
             Set(try rows(db, "SELECT id FROM review").map { $0[0] })
                 == Set(lib.reviews.map { $0.questionID.uuidString })
-        else { throw TailError.invalid("복습 연결이 올바르지 않습니다.") }
+        else { throw KkokkomuError.invalid("복습 연결이 올바르지 않습니다.") }
         return lib
     }
     public func load() throws -> Library {
@@ -181,20 +181,20 @@ public actor Repository {
     }
     public func backup(to destination: URL) throws {
         guard destination.standardizedFileURL != url.standardizedFileURL else {
-            throw TailError.invalid("보관함 원본과 다른 위치를 선택하세요.")
+            throw KkokkomuError.invalid("보관함 원본과 다른 위치를 선택하세요.")
         }
         let temporary = destination.deletingLastPathComponent().appendingPathComponent(
-            ".tail-backup-\(UUID()).sqlite")
+            ".kkokkomu-backup-\(UUID()).sqlite")
         defer { try? FileManager.default.removeItem(at: temporary) }
         try connection { source in
             try connection(at: temporary) { target in
                 guard let backup = sqlite3_backup_init(target, "main", source, "main") else {
-                    throw TailError.storage("백업을 준비하지 못했습니다.")
+                    throw KkokkomuError.storage("백업을 준비하지 못했습니다.")
                 }
                 let status = sqlite3_backup_step(backup, -1)
                 let finish = sqlite3_backup_finish(backup)
                 guard status == SQLITE_DONE, finish == SQLITE_OK else {
-                    throw TailError.storage("백업을 완료하지 못했습니다.")
+                    throw KkokkomuError.storage("백업을 완료하지 못했습니다.")
                 }
             }
         }
@@ -208,7 +208,7 @@ public actor Repository {
         guard
             source.standardizedFileURL.resolvingSymlinksInPath()
                 != url.standardizedFileURL.resolvingSymlinksInPath()
-        else { throw TailError.invalid("현재 보관함은 복원 대상으로 선택할 수 없습니다.") }
+        else { throw KkokkomuError.invalid("현재 보관함은 복원 대상으로 선택할 수 없습니다.") }
         let lib = try connection(at: source, readonly: true) { try readLibrary($0) }
         let recovery = url.deletingLastPathComponent().appendingPathComponent(
             "recovery-\(UUID()).sqlite")

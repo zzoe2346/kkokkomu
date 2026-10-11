@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import TailCore
+@testable import KkokkomuCore
 
 @Test func largeInputDoesNotBlockProcessPipes() async throws {
     let input = String(repeating: "한글 답변과 코드\n", count: 15000)
@@ -22,7 +22,7 @@ import Testing
     #expect(Date().timeIntervalSince(start) < 3)
 }
 @Test func timeoutRetainsFailureInsteadOfSuccess() async {
-    await #expect(throws: TailError.self) {
+    await #expect(throws: KkokkomuError.self) {
         try await CLIRunner.run(executable: "/bin/sleep", arguments: ["10"], timeout: 0.1)
     }
 }
@@ -38,7 +38,7 @@ import Testing
 }
 @Test func emptyEvaluationCannotBecomeFeedback() {
     let material = Sample.library().questions[0].material
-    #expect(throws: TailError.self) {
+    #expect(throws: KkokkomuError.self) {
         try Generation(question: material, nextQuestion: material).validate(evaluation: true)
     }
     #expect(Source(title: "file", url: "file:///private/test").safeURL == nil)

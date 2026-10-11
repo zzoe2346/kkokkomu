@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
+import KkokkomuCore
 import Observation
-import TailCore
 import UniformTypeIdentifiers
 
 @MainActor @Observable final class StudyStore {
@@ -38,6 +38,7 @@ import UniformTypeIdentifiers
         } else if let i = args.firstIndex(of: "--data-dir"), args.count > i + 1 {
             dataDirectory = URL(fileURLWithPath: args[i + 1])
         } else {
+            // Preserve the existing library when the app or checkout is renamed.
             dataDirectory = FileManager.default.urls(
                 for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent(
                     "Tail")
@@ -186,8 +187,8 @@ import UniformTypeIdentifiers
                     scheduleSave()
                 }
                 if error is CancellationError
-                    || (error as? TailError)?.errorDescription
-                        == TailError.cancelled.errorDescription
+                    || (error as? KkokkomuError)?.errorDescription
+                        == KkokkomuError.cancelled.errorDescription
                 {
                     notice = "생성을 취소했습니다. 저장된 내용에서 이어갈 수 있어요."
                 } else {
@@ -341,7 +342,7 @@ import UniformTypeIdentifiers
     func backup() {
         guard loaded, !loadFailed, busy == nil else { return }
         let panel = NSSavePanel()
-        panel.nameFieldStringValue = "Tail-backup.sqlite"
+        panel.nameFieldStringValue = "Kkokkomu-backup.sqlite"
         panel.allowedContentTypes = [.database]
         panel.canCreateDirectories = true
         guard panel.runModal() == .OK, let url = panel.url else { return }

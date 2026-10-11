@@ -2,15 +2,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "Tail", platforms: [.macOS("26.0")],
+    name: "Kkokkomu", platforms: [.macOS("26.0")],
     products: [
-        .executable(name: "Tail", targets: ["TailApp"]),
-        .executable(name: "TailQA", targets: ["TailQA"]),
+        .executable(name: "Kkokkomu", targets: ["KkokkomuApp"]),
+        .executable(name: "KkokkomuQA", targets: ["KkokkomuQA"]),
     ],
     targets: [
-        .target(name: "TailCore"),
-        .executableTarget(name: "TailApp", dependencies: ["TailCore"]),
-        .executableTarget(name: "TailQA", dependencies: ["TailCore"]),
-        .testTarget(name: "TailCoreTests", dependencies: ["TailCore"]),
-        .testTarget(name: "TailAppTests", dependencies: ["TailApp"]),
+        .target(name: "KkokkomuCore"),
+        .executableTarget(name: "KkokkomuApp", dependencies: ["KkokkomuCore"]),
+        .executableTarget(name: "KkokkomuQA", dependencies: ["KkokkomuCore"]),
+        .testTarget(name: "KkokkomuCoreTests", dependencies: ["KkokkomuCore"]),
+        .testTarget(name: "KkokkomuAppTests", dependencies: ["KkokkomuApp"]),
     ], swiftLanguageModes: [.v6])
