@@ -4,7 +4,7 @@ import TailCore
 
 struct LibraryView: View {
     @Bindable var store: StudyStore
-    @AppStorage("fontSize", store: Preferences.defaults) private var fontSize = 18.0
+    @AppStorage("fontSize", store: Preferences.defaults) private var fontSize = 17.0
     var body: some View {
         NavigationSplitView {
             List(selection: $store.selection) {
@@ -99,7 +99,7 @@ struct LibraryView: View {
                 Menu {
                     Button("글자 크게") { fontSize = min(36, fontSize + 2) }.keyboardShortcut("+")
                     Button("글자 작게") { fontSize = max(14, fontSize - 2) }.keyboardShortcut("-")
-                    Button("기본 18pt") { fontSize = 18 }.keyboardShortcut("0")
+                    Button("기본 17pt") { fontSize = 17 }.keyboardShortcut("0")
                     Divider()
                     SettingsLink { Text("모든 설정…") }
                 } label: {

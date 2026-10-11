@@ -68,7 +68,9 @@ import UniformTypeIdentifiers
             let ids = Set(library.questions(in: session.id).map(\.id))
             let contents =
                 [session.title, session.tags, session.experience]
-                + library.questions(in: session.id).map { $0.material.text }
+                + library.questions(in: session.id).flatMap {
+                    [$0.material.text, $0.material.presentation?.title ?? ""]
+                }
                 + library.attempts.filter { ids.contains($0.questionID) }.map(\.text)
             return contents.contains { $0.localizedCaseInsensitiveContains(search) }
         }.sorted { $0.createdAt > $1.createdAt }

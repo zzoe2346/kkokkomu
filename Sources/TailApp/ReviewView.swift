@@ -85,7 +85,8 @@ struct ReviewView: View {
         {
             VStack(alignment: .leading, spacing: 12) {
                 Text(s.title).font(.caption).foregroundStyle(.secondary)
-                Text(q.material.text).font(.headline).fixedSize(horizontal: false, vertical: true)
+                Text(q.material.presentation?.title ?? q.material.text).font(.headline).fixedSize(
+                    horizontal: false, vertical: true)
                 HStack {
                     DatePicker(
                         "복습일",

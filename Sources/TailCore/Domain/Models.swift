@@ -28,8 +28,24 @@ public struct Source: Codable, Sendable, Equatable {
         return u
     }
 }
+public struct QuestionPresentation: Codable, Sendable, Equatable {
+    public var title: String
+    public var context: String
+    public var prompt: String
+    public var isHypothetical: Bool
+    public init(title: String, context: String, prompt: String, isHypothetical: Bool) {
+        self.title = title
+        self.context = context
+        self.prompt = prompt
+        self.isHypothetical = isHypothetical
+    }
+    public var fullText: String {
+        [context.trimmed, prompt.trimmed].filter { !$0.isEmpty }.joined(separator: "\n\n")
+    }
+}
 public struct Material: Codable, Sendable, Equatable {
     public var text = ""
+    public var presentation: QuestionPresentation?
     public var intent = ""
     public var hints: [String] = []
     public var clarification = ""
@@ -38,7 +54,8 @@ public struct Material: Codable, Sendable, Equatable {
     public var explanation = ""
     public init(
         text: String = "", intent: String = "", hints: [String] = [], clarification: String = "",
-        keywords: [String] = [], sampleAnswer: String = "", explanation: String = ""
+        keywords: [String] = [], sampleAnswer: String = "", explanation: String = "",
+        presentation: QuestionPresentation? = nil
     ) {
         self.text = text
         self.intent = intent
@@ -47,11 +64,17 @@ public struct Material: Codable, Sendable, Equatable {
         self.keywords = keywords
         self.sampleAnswer = sampleAnswer
         self.explanation = explanation
+        self.presentation = presentation
     }
     public func validate() throws {
         guard !text.trimmed.isEmpty, !sampleAnswer.trimmed.isEmpty, !explanation.trimmed.isEmpty,
             !hints.isEmpty, text.count < 8000
         else { throw TailError.invalid("질문이나 해설이 비어 있습니다. 다시 생성하세요.") }
+        if let presentation {
+            guard !presentation.title.trimmed.isEmpty, presentation.title.count <= 100,
+                !presentation.prompt.trimmed.isEmpty, presentation.fullText.count < 8000
+            else { throw TailError.invalid("질문의 제목이나 핵심 질문이 올바르지 않습니다.") }
+        }
     }
 }
 public struct Feedback: Codable, Sendable, Equatable {

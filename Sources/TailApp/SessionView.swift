@@ -3,7 +3,8 @@ import TailCore
 
 struct RichText: View {
     let text: String
-    @AppStorage("fontSize", store: Preferences.defaults) private var size = 18.0
+    var weight: Font.Weight = .regular
+    @AppStorage("fontSize", store: Preferences.defaults) private var size = 17.0
     var body: some View {
         let parts = text.components(separatedBy: "```")
         VStack(alignment: .leading, spacing: 12) {
@@ -13,7 +14,9 @@ struct RichText: View {
                         part.contains("\n")
                         ? String(part.drop(while: { $0 != "\n" }).dropFirst()) : part
                     ScrollView(.horizontal) {
-                        Text(code).font(.system(size: size - 2, design: .monospaced)).fixedSize(
+                        Text(code.trimmingCharacters(in: .newlines)).font(
+                            .system(size: size - 2, design: .monospaced)
+                        ).fixedSize(
                             horizontal: true, vertical: false
                         ).textSelection(.enabled).padding(14)
                     }
@@ -21,11 +24,13 @@ struct RichText: View {
                 } else if !part.trimmed.isEmpty {
                     Text(
                         (try? AttributedString(
-                            markdown: part,
+                            markdown: part.trimmed,
                             options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
-                            ?? AttributedString(part)
+                            ?? AttributedString(part.trimmed)
                     )
-                    .font(.system(size: size)).lineSpacing(5).textSelection(.enabled).fixedSize(
+                    .font(.system(size: size, weight: weight)).lineSpacing(5).textSelection(
+                        .enabled
+                    ).fixedSize(
                         horizontal: false, vertical: true)
                 }
             }
@@ -38,7 +43,7 @@ struct SessionView: View {
     @ViewState<String> private var objection = ""
     @ViewState<Bool> private var showObjection = false
     @ViewState<Bool> private var showExplanation = false
-    @AppStorage("fontSize", store: Preferences.defaults) private var size = 18.0
+    @AppStorage("fontSize", store: Preferences.defaults) private var size = 17.0
     private var session: Session? { store.library.sessions.first { $0.id == sessionID } }
     var body: some View {
         ScrollViewReader { proxy in
@@ -74,7 +79,10 @@ struct SessionView: View {
                                         } label: {
                                             HStack(alignment: .top) {
                                                 Text("\(q.ordinal).").monospacedDigit()
-                                                Text(q.material.text).multilineTextAlignment(
+                                                Text(
+                                                    q.material.presentation?.title
+                                                        ?? q.material.text
+                                                ).multilineTextAlignment(
                                                     .leading)
                                                 Spacer()
                                                 if q.id == store.currentQuestion?.id {
@@ -142,10 +150,7 @@ struct SessionView: View {
                         ? "bookmark.fill" : "bookmark")
             }.buttonStyle(.borderless).disabled(store.busy != nil)
         }
-        Text(q.material.text).font(.system(size: size + 6, weight: .semibold)).lineSpacing(5)
-            .textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
-        Text(q.material.intent).font(.callout).foregroundStyle(.secondary).fixedSize(
-            horizontal: false, vertical: true)
+        QuestionContentView(material: q.material).id(q.id)
         if q.isAnswering {
             VStack(alignment: .leading, spacing: 12) {
                 Text(q.isReview ? "이전 답을 보지 않고 다시 답해보세요" : "내 답변").font(.headline)
@@ -329,7 +334,10 @@ struct SessionView: View {
                         isOn: Binding(
                             get: { store.library.reviews.contains { $0.questionID == q.id } },
                             set: { _ in store.toggleReview(q) })
-                    ) { Text(q.material.text).fixedSize(horizontal: false, vertical: true) }
+                    ) {
+                        Text(q.material.presentation?.title ?? q.material.text).fixedSize(
+                            horizontal: false, vertical: true)
+                    }
                     .toggleStyle(.checkbox)
                     if let f = a?.result?.feedback {
                         ForEach(

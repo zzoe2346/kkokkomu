@@ -11,3 +11,8 @@ SQLite의 session, question, attempt, review 테이블은 외래 키로 관계�
 백업은 일관된 SQLite 스냅샷이다. 복원 전 형식, 스키마 버전, quick_check, foreign_key_check 및 payload의 관계를 검증한다. 기존 DB의 복구 사본을 만든 뒤 트랜잭션으로 교체한다. 미래 버전이나 손상된 파일은 거부하고 원본을 유지한다.
 
 Codex는 사용자 설정을 변경하지 않고 저장된 ChatGPT 인증을 사용한다. 생성은 ephemeral, read-only 실행으로 이루어지며 앱과 셸 도구를 끄고 공식 웹 자료만 필요에 따라 조회한다. 프롬프트는 표준입력으로 보내며 작업 폴더는 완료 및 실패 후 정리한다. 구조화된 JSON과 완료 이벤트를 함께 확인한다. 프로세스 그룹을 사용해 취소 시 자식 프로세스까지 정리한다.
+
+
+## 질문 표시 정보 호환성
+
+Material의 선택적 presentation은 title, context, prompt, isHypothetical을 저장한다. 기존 JSON과 SQLite payload에 필드가 없으면 nil로 읽고 원문 text를 표시한다. 관계 테이블과 스키마 버전은 그대로 유지한다. 새 생성은 context와 prompt로 text를 구성하여 검색 및 모델 맥락과 화면의 조건이 일치하게 한다. 평가와 재검토 때는 기존 질문의 text와 presentation을 유지하고 해설만 생성 결과에서 받는다.

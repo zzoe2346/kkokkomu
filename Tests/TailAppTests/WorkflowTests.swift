@@ -15,7 +15,9 @@ import Testing
     let store = StudyStore(directory: url)
     await store.load()
     store.addSample()
-    let material = Sample.library().questions[0].material
+    var material = Sample.library().questions[0].material
+    material.text = "AI가 임의로 다시 쓴 질문"
+    material.presentation?.prompt = "기존 질문을 바꾸면 안 됩니다."
     var feedback = Feedback()
     feedback.strengths = ["핵심을 설명했습니다."]
     feedback.reviewSuggested = true
@@ -51,6 +53,8 @@ import Testing
     try await waitForOperation(store)
     #expect(store.library.attempts.count == 1)
     #expect(store.library.attempts[0].status == "complete")
+    #expect(store.library.attempts[0].result?.question.text == q.material.text)
+    #expect(store.library.attempts[0].result?.question.presentation == q.material.presentation)
     store.next(q)
     store.next(q)
     #expect(store.library.questions.count == 2)

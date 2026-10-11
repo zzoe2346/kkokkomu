@@ -4,7 +4,7 @@ import TailCore
 
 struct PreferencesView: View {
     @Bindable var store: StudyStore
-    @AppStorage("fontSize", store: Preferences.defaults) private var size = 18.0
+    @AppStorage("fontSize", store: Preferences.defaults) private var size = 17.0
     @AppStorage("appearance", store: Preferences.defaults) private var appearance = "system"
     @AppStorage("codexPath", store: Preferences.defaults) private var codexPath = CodexClient
         .defaultExecutable
@@ -22,7 +22,7 @@ struct PreferencesView: View {
                 LabeledContent("본문 \(Int(size))pt") {
                     Slider(value: $size, in: 14...36, step: 1).accessibilityLabel("본문 글자 크기")
                 }
-                Button("기본 18pt로 복원") { size = 18 }
+                Button("기본 17pt로 복원") { size = 17 }
             }
             Section("복습 간격") {
                 Stepper("첫 복습, \(first)일", value: $first, in: 1...30)
