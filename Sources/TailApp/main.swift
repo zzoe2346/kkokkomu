@@ -23,6 +23,7 @@ typealias ViewState<Value> = SwiftUI.State<Value>
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @ViewState<StudyStore> private var store = StudyStore()
     @AppStorage("appearance", store: Preferences.defaults) private var appearance = "system"
+    @AppStorage("fontSize", store: Preferences.defaults) private var fontSize = 17.0
     @Environment(\.scenePhase) private var phase
     var body: some Scene {
         Window("Tail", id: "main") {
@@ -55,6 +56,11 @@ typealias ViewState<Value> = SwiftUI.State<Value>
                 Divider()
                 Button("보관함 백업…") { store.backup() }.disabled(store.busy != nil || store.loadFailed)
                 Button("백업 복원…") { store.restore() }.disabled(store.busy != nil || store.loadFailed)
+            }
+            CommandMenu("읽기") {
+                Button("글자 크게") { fontSize = min(36, fontSize + 2) }.keyboardShortcut("+")
+                Button("글자 작게") { fontSize = max(14, fontSize - 2) }.keyboardShortcut("-")
+                Button("기본 17pt") { fontSize = 17 }.keyboardShortcut("0")
             }
         }
         Settings {

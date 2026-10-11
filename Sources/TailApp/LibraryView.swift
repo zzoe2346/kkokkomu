@@ -97,9 +97,9 @@ struct LibraryView: View {
             }
             ToolbarItem {
                 Menu {
-                    Button("글자 크게") { fontSize = min(36, fontSize + 2) }.keyboardShortcut("+")
-                    Button("글자 작게") { fontSize = max(14, fontSize - 2) }.keyboardShortcut("-")
-                    Button("기본 17pt") { fontSize = 17 }.keyboardShortcut("0")
+                    Button("글자 크게") { fontSize = min(36, fontSize + 2) }
+                    Button("글자 작게") { fontSize = max(14, fontSize - 2) }
+                    Button("기본 17pt") { fontSize = 17 }
                     Divider()
                     SettingsLink { Text("모든 설정…") }
                 } label: {
