@@ -13,7 +13,7 @@ open dist/꼬꼬무.app
 
 검사는 전체 Xcode 설치를 권장한다. 현재 Mac의 Command Line Tools만 사용했을 때 Swift Testing 매크로를 찾지 못하는 오류가 재빌드 중 발생했고, 같은 Swift 6.4의 Xcode 도구 모음에서는 통과했다. 검사 규칙이나 테스트를 끄는 방식으로 회피하지 않는다.
 
-패키징은 `dist/꼬꼬무.app`에 실행 파일, Info.plist, Icon Composer로 컴파일한 아이콘과 라이선스 고지를 넣고 ad-hoc 서명을 검증한다. 공증과 원격 배포는 별도 작업이다. 아이콘을 바꾸면 `./scripts/compile-icon.sh`로 원본과 결과의 체크섬을 다시 만든다.
+패키징은 `dist/꼬꼬무.app`에 실행 파일, Info.plist, Icon Composer로 컴파일한 아이콘과 라이선스 고지를 넣고 ad-hoc 서명을 검증한다. 공증과 원격 배포는 별도 작업이다. 아이콘을 바꾸면 `./scripts/compile-icon.sh`로 원본과 결과의 체크섬을 다시 만든다. 공개용 1024px PNG는 `./scripts/export-icon-preview.sh`로 내보낸다. 배우자와 동일한 Icon Composer 설정을 사용하며 ICNS의 바깥 여백을 README에 가져오지 않는다.
 
 앱 표시 이름은 꼬꼬무, Swift 패키지와 실행 파일은 `Kkokkomu`, 모듈은 `KkokkomuApp`, `KkokkomuCore`, 실제 생성 검증 도구는 `KkokkomuQA`다. 저장소와 로컬 프로젝트 폴더 이름은 `kkokkomu`다. 경로는 스크립트 위치를 기준으로 계산하므로 체크아웃 위치를 바꿔도 동일한 명령을 사용한다.
 

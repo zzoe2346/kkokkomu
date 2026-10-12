@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Artwork/AppIcon/Preview/AppIcon-default.png" width="160" alt="빨간 머리띠를 매고 파란 물음표 옆에서 생각하는 꼬꼬무 캐릭터">
+  <img src="Artwork/AppIcon/Preview/AppIcon-default.png" width="160" height="160" alt="화이트 배경에서 빨간 머리띠를 매고 파란 물음표 옆에서 생각하는 꼬꼬무 캐릭터">
 </p>
 
 <h1 align="center">꼬꼬무</h1>
