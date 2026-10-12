@@ -89,7 +89,7 @@ README와 사용 안내의 상대 링크, 제목 앵커, 이미지 대체 텍스
 
 `./scripts/compile-icon.sh`, `./scripts/export-icon-preview.sh`, `./scripts/package.sh`를 실행했다. 체크섬 검사, Release 빌드와 ad-hoc 서명이 통과했고 번들의 ICNS 및 Assets.car가 컴파일 결과와 바이트 단위로 일치했다. 내보내기 스크립트의 zsh 문법도 검사했다. 실제 앱을 정상 종료하고 같은 경로의 새 번들로 재실행한 후 정보 창에서 화이트 아이콘을 확인했다. 학습 DB 19개 세션, 21개 질문, 2개 답변과 설정의 변경 전후 해시가 일치했다.
 
-공개 PNG는 Icon Composer에 포함된 `ictool`의 macOS, Default, 1024×1024, scale 1, design generation 27 설정으로 내보냈다. 같은 설정으로 내보낸 배우자 PNG는 기존 파일과 SHA-256이 일치했다. 두 이미지의 알파 128 이상 경계가 모두 `[0, 0, 1023, 1023]`으로 같아 기존 ICNS 추출물의 바깥 여백 차이를 제거했다. 프로필은 96×96px, 각 README는 160×160px로 너비와 높이를 명시한다.
+공개 PNG는 Icon Composer에 포함된 `ictool`의 macOS, Default, 1024×1024, scale 1, design generation 27 설정으로 내보냈다. 같은 설정으로 내보낸 배우자 PNG는 기존 파일과 SHA-256이 일치했다. GitHub에서 기존 이미지 URL과 쿼리 버전이 이전 256px 노란 아이콘을 반환해 공개 파일명을 `AppIcon-white.png`로 구분했다. 두 이미지의 알파 128 이상 경계가 모두 `[0, 0, 1023, 1023]`으로 같아 기존 ICNS 추출물의 바깥 여백 차이를 제거했다. 프로필은 96×96px, 각 README는 160×160px로 너비와 높이를 명시한다.
 
 Icon Composer 메뉴 조작은 도구의 요소 식별자 오류로 내보내기를 완료하지 못해, 같은 앱에 포함된 공식 `ictool`의 `--help`에 나온 내보내기를 사용했다. 새 AI 호출이나 캐릭터 재생성은 하지 않았다. 문서 링크와 PNG 형식, 공개 범위 및 `git diff --check`를 확인했다. 앱 동작 코드가 바뀌지 않아 학습 로직 테스트는 다시 실행하지 않았고, Mono 및 Finder와 Dock의 실제 표시는 별도로 확인하지 않았다. 기존 본문 스크린샷은 이번 아이콘 변경과 무관해 유지했다.
 

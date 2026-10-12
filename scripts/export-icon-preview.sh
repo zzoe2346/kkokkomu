@@ -10,6 +10,6 @@ if [[ ! -x "$kkokkomu_ictool" ]]; then
 fi
 mkdir -p Artwork/AppIcon/Preview
 "$kkokkomu_ictool" Artwork/AppIcon/AppIcon.icon --export-image \
-    --output-file "$PWD/Artwork/AppIcon/Preview/AppIcon-default.png" \
+    --output-file "$PWD/Artwork/AppIcon/Preview/AppIcon-white.png" \
     --platform macOS --rendition Default --width 1024 --height 1024 --scale 1 \
     --design-generation 27
