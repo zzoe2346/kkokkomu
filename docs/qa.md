@@ -71,6 +71,18 @@ Swift Testing 7개 통과: 중복 제출 방지와 기존 답변 보존, 중단�
 
 이번 변경은 AI 처리 규칙을 바꾸지 않아 새 원격 생성은 실행하지 않았다. 기존 프로세스 연동과 고정 응답 테스트로 검증했다. macOS 및 접근성 검증 범위는 아래와 같다.
 
+## 2026-10-12 README 구성과 공개 화면 갱신
+
+기준 revision `5abdc36`, macOS 27.0.1 arm64에서 Codex와 컴퓨터 사용 도구로 작업했다. 사용자 선택에 따라 [IINA](https://github.com/iina/iina/blob/develop/README.md)의 중앙 아이콘과 짧은 소개, [isowords](https://github.com/pointfreeco/isowords/blob/main/README.md)의 화면 중심 소개 구성을 참고했다. 기존 캐릭터 아이콘은 `iconutil`로 PNG를 추출했으며 새로 생성하거나 수정하지 않았다. 상세 단축키와 백업 안내는 [사용 안내](usage.md)로 옮겨 보존했다.
+
+기존 QA 보관함을 별도 사본으로 만들어 현재 앱에서 피드백과 오늘 복습 화면을 촬영했다. 개인 이력서와 실제 학습 보관함은 촬영에 사용하지 않았으며 새 AI 요청도 하지 않았다. 공개 캡처는 2320×1640px이고, 화면 내용은 기존 실제 생성 결과와 QA 답변이다. 촬영 후 기본 보관함으로 앱을 다시 실행했다.
+
+- [답변 피드백](screenshots/kkokkomu-feedback.png): SHA-256 `6c82f1b3314203bc5111a76e18e8fb4b3b4d38d3a171f760abe1ccabe02d871d`.
+- [오늘 복습](screenshots/kkokkomu-review.png): SHA-256 `c8020f6bd8d9a4f205d4dc778bd80a81742127b2b30c1029193572d224459761`.
+- 기존 [샘플 질문](screenshots/kkokkomu-light.png)은 이미지 내용과 크기를 유지하고 JPEG 바이트에 PNG 확장자가 붙어 있던 형식만 PNG로 맞췄다.
+
+README와 사용 안내의 상대 링크, 제목 앵커, 이미지 대체 텍스트, PNG 형식 및 가운뎃점 미사용을 검사했다. 실제 캡처에서 개인 기록이 없는지 시각 검토했고 `git diff --check`를 확인했다. 앱 코드와 번들, DB 및 인증 로직은 변경하지 않아 빌드, 자동 테스트와 새 AI 생성은 재실행하지 않았다. 이 기록은 문서와 공개 이미지 검증이며 앱 기능의 새 회귀 검증을 의미하지 않는다.
+
 ## 확인 범위의 한계
 
 실행 환경은 macOS 27.0.1 Apple Silicon 한 대다. macOS 26 실기기, Intel, VoiceOver 실제 낭독과 물리 키보드의 한글 IME 조합은 별도로 검증하지 않았다. 한글 붙여넣기와 저장, 접근성 트리의 입력 이름과 주요 버튼, 키보드 단축키는 확인했다. AI 결과는 위 주제들의 내용과 근거를 검토했으며 임의의 CS 주제 전체에 대한 정확성을 보증하지 않는다. 현재 결과물은 로컬 개인 사용용 ad-hoc 서명 앱이다.

@@ -14,3 +14,5 @@ Icon Composer 형식은 Xcode의 actool로 컴파일한다.
 `Compiled/AppIcon.icns`와 `Compiled/Assets.car`를 앱 번들에 함께 넣는다. 소스와 컴파일 결과의 SHA-256을 `checksums.sha256`으로 확인하며, 원본을 수정한 경우 다시 컴파일해야 패키징 검사를 통과한다.
 
 생성 프롬프트는 제작 당시 개발 이름인 Tail을 그대로 보관한다. 현재 이름은 꼬꼬무(Kkokkomu)이며, 이름 변경으로 캐릭터 이미지를 다시 생성하지 않는다.
+
+`Preview/AppIcon-default.png`는 기존 `Compiled/AppIcon.icns`에서 `iconutil`로 추출한 256px 기본 아이콘이다. README와 GitHub 프로필에서 같은 캐릭터를 사용하며, 아이콘 원본이나 앱 번들 자산을 변경하지 않는다.
